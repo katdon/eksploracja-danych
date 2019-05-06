@@ -23,6 +23,8 @@ data_all <- rbind(data_train, data_test)
 View(summary(data_all))
 
 library(ggplot2)
+install.packages("chron")
+library(chron)
 # laczymy date z godzina
 Date_time = chron(dates=data_all[,1],times=data_all[,2],format=c('d/m/y','h:m:s'))
 data_all <- as.data.frame(data_all)
@@ -31,9 +33,15 @@ data_all[,25] <- Date_time
 ggplot(data = data_all) +
   geom_point(mapping = aes(x = `1:Date`, y = `3:Temperature_Comedor_Sensor`), position = 'jitter')
 #robimy wykres: porównujemy temperature jadalni z pokojem
-
-par(mfrow = c(2,1))
+plot(data_all[,25],data_all[,4], col = 'red', xlab = "Data", ylab = 'Stopnie Celsjusza', main = 'Temperatura')
 points(data_all[,25],data_all[,3], col = 'blue')
-plot(data_all[,25],data_all[,4], col = 'red')
 legend('topleft', legend=c("Pokoj", "Jadalnia"), col = c('red','blue'), pch = 21)
+
+#robimy wykres: porównujemy temperature jadalni z pokojem i z temp na dworze
+plot(data_all[,25],data_all[,22], col = 'green', xlab = "Data", ylab = 'Stopnie Celsjusza', main = 'Temperatura')
+points(data_all[,25],data_all[,3], col = 'blue')
+points(data_all[,25],data_all[,4], col = 'red')
+legend('topleft', legend=c("Pokoj", "Jadalnia", "Poza domem"), col = c('red','blue', 'green'), pch = 21, cex=0.45)
+
+
 
