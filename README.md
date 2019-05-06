@@ -9,5 +9,5 @@
 
 ## Zbiory danych
 
-* [Superconductivty Data Data Set](https://archive.ics.uci.edu/ml/datasets/Superconductivty+Data)
-* [Communities and Crime Data Set ](https://archive.ics.uci.edu/ml/datasets/Communities+and+Crime)
+* [SML2010 Data Set](https://archive.ics.uci.edu/ml/datasets/SML2010?fbclid=IwAR1OlCM5gGI18L1j7HgZrtuIPQU9n-zA_VjYnO0-1gyJOUxFsoErTKJYeq8)
+* [Communities and Crime Data Set](https://archive.ics.uci.edu/ml/datasets/Communities+and+Crime)
