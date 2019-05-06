@@ -20,4 +20,20 @@ unique(data_test[,1])
 # do ogolnych analiz (przed modelowaniem) patrzymy na wszystkie dane
 data_all <- rbind(data_train, data_test)
 #data_all <- data_all[,-c(19,20,21)]
-summary(data_all)
+View(summary(data_all))
+
+library(ggplot2)
+# laczymy date z godzina
+Date_time = chron(dates=data_all[,1],times=data_all[,2],format=c('d/m/y','h:m:s'))
+data_all <- as.data.frame(data_all)
+data_all[,25] <- Date_time
+#robimy wykres; dodajemy szum losowy by punkty sie nie nakladaly
+ggplot(data = data_all) +
+  geom_point(mapping = aes(x = `1:Date`, y = `3:Temperature_Comedor_Sensor`), position = 'jitter')
+#robimy wykres: porównujemy temperature jadalni z pokojem
+
+par(mfrow = c(2,1))
+points(data_all[,25],data_all[,3], col = 'blue')
+plot(data_all[,25],data_all[,4], col = 'red')
+legend('topleft', legend=c("Pokoj", "Jadalnia"), col = c('red','blue'), pch = 21)
+
