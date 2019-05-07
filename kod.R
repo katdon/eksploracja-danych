@@ -84,3 +84,17 @@ boxplot(data_all[,8], data_all[,9], data_all[,23], col = c('blue', 'red', 'green
         names = c('Jadalnia','Pokój','Poza domem'), ylab = '%', main = 'Wilgotnoœæ')
 
 
+
+#robimy wykres: porównujemy natezenie oswietlenia w pokoju i jadalni
+plot(data_all[1:1000,25],data_all[1:1000,11], col = 'red', ylab = 'Lux', xlab='Data', main = 'Natê¿enie oœwietlenia')
+points(data_all[1:1000,25],data_all[1:1000,10], col = 'blue')
+legend('topleft', legend=c("Pokój", "Jadalnia"), col = c('red','blue'), pch = 21, cex=0.6)
+
+# boxploty natezenia swiatla w pokoju, jadalni
+boxplot(data_all[,10], data_all[,11], col = c('blue', 'red'), 
+        names = c('Jadalnia','Pokój'), ylab = 'Lux', main = 'Natê¿enie')
+
+
+#wiatr
+plot(data_all[1:1000,25],data_all[1:1000,14], col = 'green', xlab = "Data", ylab = 'm/s', main = 'Wiatr')
+hist(data_all[,14], xlab = "m/s", ylab = 'Czêstoœæ', main = 'Wiatr', col = "green")
