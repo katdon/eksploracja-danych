@@ -1,0 +1,13 @@
+name: communities
+dependencies:
+  - python=3.7
+  - matplotlib
+  - jupyter
+  - ipython
+  - pandas
+  - numpy
+  - matplotlib
+  - seaborn
+  - pip
+  - scikit-learn
+  - pandas-profiling
