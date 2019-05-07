@@ -140,3 +140,19 @@ data_test_3 <- data_test[,c(3,4,6,7,8,9,10,11,12,14,15,16,17,18,22,23,24)]
 y <- data.frame(data_test_3,predict(model_p_3,data_test_3))
 rmse(y[,2], y[,18])
 step(model_p) # wyszlo to samo
+
+#Tworzymy model wielorakiej regresji liniowej dla dworu
+data_dwor <- data_train[,c(3,4,6,7,8,9,10,11,12,14,15,16,17,18,22,23,24)]
+model_d <- lm(`22:Temperature_Exterior_Sensor`~., data = data_dwor)
+summary(model_d)
+model_d_1 <- lm(`22:Temperature_Exterior_Sensor`~ . - `24:Day_Of_Week`, data = data_dwor)
+summary(model_d_1)
+model_d_2 <- lm(`22:Temperature_Exterior_Sensor` ~ . - `17:Meteo_Exterior_Sol_Sud` - `24:Day_Of_Week`, data = data_dwor)
+summary(model_d_2)
+# prognoza i sprawdzenie z prognoza z danych
+data_test_4 <- data_test[,c(3,4,6,7,8,9,10,11,12,14,15,16,17,18,22,23,24)]
+y <- data.frame(data_test_4,predict(model_d_2,data_test_4),data_test[,5])
+data_test[,5] <- as.data.frame(data_test[,5])
+rmse(y[,19], y[,18])
+rmse(y[,15],y[,18])
+rmse(y[,15],y[,19])
