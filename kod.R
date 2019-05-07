@@ -43,5 +43,18 @@ points(data_all[,25],data_all[,3], col = 'blue')
 points(data_all[,25],data_all[,4], col = 'red')
 legend('topleft', legend=c("Pokoj", "Jadalnia", "Poza domem"), col = c('red','blue', 'green'), pch = 21, cex=0.45)
 
+#robimy wykres: porównujemy zawartosc CO2 w jadalni i pokoju
+plot(data_all[,25],data_all[,7], col = 'red', xlab = "Data", ylab = 'ppm', main = 'Zawartoœæ CO2')
+points(data_all[,25],data_all[,6], col = 'blue')
+legend('topleft', legend=c("Pokój", "Jadalnia"), col = c('red','blue'), pch = 21, cex=0.6)
 
-
+#robimy wykres: sprawdzamy kiedy dokladnie byly skoki zawartosci
+plot(data_all[1240:1300,25],data_all[1240:1300,7], col = 'red', xlab = "Data", ylab = 'ppm', main = 'Zawartoœæ CO2')
+points(data_all[1240:1300,25],data_all[1240:1300,6], col = 'blue')
+legend('topleft', legend=c("Pokój", "Jadalnia"), col = c('red','blue'), pch = 21, cex=0.6)
+plot(data_all[80:120,25],data_all[80:120,7], col = 'red', xlab = "Data", ylab = 'ppm', main = 'Zawartoœæ CO2')
+points(data_all[80:120,25],data_all[80:120,6], col = 'blue')
+legend('topleft', legend=c("Pokój", "Jadalnia"), col = c('red','blue'), pch = 21, cex=0.6)
+plot(data_all[750:800,25],data_all[750:800,7], col = 'red', xlab = "Data", ylab = 'ppm', main = 'Zawartoœæ CO2')
+points(data_all[750:800,25],data_all[750:800,6], col = 'blue')
+legend('topleft', legend=c("Pokój", "Jadalnia"), col = c('red','blue'), pch = 21, cex=0.6)
