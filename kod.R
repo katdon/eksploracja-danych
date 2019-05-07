@@ -26,6 +26,7 @@ library(ggplot2)
 install.packages("chron")
 library(chron)
 # laczymy date z godzina
+data_all <- as.data.frame(data_all)
 Date_time = chron(dates=data_all[,1],times=data_all[,2],format=c('d/m/y','h:m:s'))
 data_all <- as.data.frame(data_all)
 data_all[,25] <- Date_time
@@ -58,3 +59,28 @@ legend('topleft', legend=c("Pokój", "Jadalnia"), col = c('red','blue'), pch = 21
 plot(data_all[750:800,25],data_all[750:800,7], col = 'red', xlab = "Data", ylab = 'ppm', main = 'Zawartoœæ CO2')
 points(data_all[750:800,25],data_all[750:800,6], col = 'blue')
 legend('topleft', legend=c("Pokój", "Jadalnia"), col = c('red','blue'), pch = 21, cex=0.6)
+
+#robimy wykres: porównujemy wilgotnoœæ powietrza w pokoju i jadalni
+plot(data_all[,25],data_all[,9], col = 'red', xlab = "Data", ylab = '%', main = 'Wilgotnoœæ')
+points(data_all[,25],data_all[,8], col = 'blue')
+legend('topleft', legend=c("Pokój", "Jadalnia"), col = c('red','blue'), pch = 21, cex=0.6)
+
+#robimy wykres: porównujemy wilgotnoœæ powietrza w pokoju, jadalni na zewnatrz
+plot(data_all[,25],data_all[,23], col = 'green', xlab = "Data", ylab = '%', main = 'Wilgotnoœæ')
+points(data_all[,25],data_all[,8], col = 'blue')
+points(data_all[,25],data_all[,9], col = 'red')
+legend('topleft', legend=c("Pokój", "Jadalnia", 'Poza domem'), col = c('red','blue', 'green'), pch = 21, cex=0.6)
+
+# boxploty temperatur w pokoju, jadalni oraz poza domem 
+boxplot(data_all[,3], data_all[,4], data_all[,22], col = c('blue', 'red', 'green'), 
+        names = c('Jadalnia','Pokój','Poza domem'), ylab = 'Stopnie Celsjusza', main = 'Temperatura')
+
+# boxploty CO2 w pokoju, jadalni
+boxplot(data_all[,6], data_all[,7], col = c('blue', 'red'), 
+        names = c('Jadalnia','Pokój'), ylab = 'ppm', main = 'Zawartoœæ CO2')
+
+# boxploty wilgotnoœci w pokoju, jadalni oraz poza domem 
+boxplot(data_all[,8], data_all[,9], data_all[,23], col = c('blue', 'red', 'green'), 
+        names = c('Jadalnia','Pokój','Poza domem'), ylab = '%', main = 'Wilgotnoœæ')
+
+
