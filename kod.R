@@ -98,3 +98,26 @@ boxplot(data_all[,10], data_all[,11], col = c('blue', 'red'),
 #wiatr
 plot(data_all[1:1000,25],data_all[1:1000,14], col = 'green', xlab = "Data", ylab = 'm/s', main = 'Wiatr')
 hist(data_all[,14], xlab = "m/s", ylab = 'Czêstoœæ', main = 'Wiatr', col = "green")
+
+#Macierze korelacji
+data <- data_train[,c(3:18,22:24)]
+View(round(cor(data),2))
+data_jadalnia <- data_train[,c(3,4,6,7,8,9,10,11,12,14,15,16,17,18,22,23,24)]
+View(round(cor(data_jadalnia),2))
+
+#Tworzymy model wielorakiej regresji liniowej
+model <- lm(`3:Temperature_Comedor_Sensor`~., data = data_jadalnia)
+summary(model)
+model_2 <- lm(`3:Temperature_Comedor_Sensor`~ . - `12:Precipitacion`, data = data_jadalnia)
+summary(model_2)
+model_3 <- lm(`3:Temperature_Comedor_Sensor`~ . - `12:Precipitacion` - `17:Meteo_Exterior_Sol_Sud`, data = data_jadalnia)
+summary(model_3)
+# prognoza
+install.packages('Metrics')
+library(Metrics)
+x <- data.frame(predict(model_3,data_test),data_test)
+rmse(x[,4], x[,1])
+# Sprawdzenie prognozy
+data_test_2 <- data_test[,c(3,4,6,7,8,9,10,11,12,14,15,16,17,18,22,23,24)]
+y <- data.frame(data_test_2,predict(model_3,data_test_2))
+rmse(y[,1], y[,18])
