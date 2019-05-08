@@ -112,6 +112,10 @@ model_2 <- lm(`3:Temperature_Comedor_Sensor`~ . - `12:Precipitacion`, data = dat
 summary(model_2)
 model_3 <- lm(`3:Temperature_Comedor_Sensor`~ . - `12:Precipitacion` - `17:Meteo_Exterior_Sol_Sud`, data = data_jadalnia)
 summary(model_3)
+library(sjPlot)
+library(sjmisc)
+library(sjlabelled)
+tab_model(model_3)
 # prognoza
 install.packages('Metrics')
 library(Metrics)
@@ -244,3 +248,13 @@ rmse(z[,4], z[,1]) # 0.5654549
 BIC(model_p_3, model_p_ob_4)
 AIC(model_p_3, model_p_ob_4)
 # wybieramy model_p_ob_4; kryteria BIC i AIC s¹ duzo lepsze niz dla modelu z obserwacjami odstajacymi
+
+model_pca <- prcomp(data_all[,c(3:18,22:23)], scale = T)
+summary(model_pca)
+
+model_pca$rotation
+
+autoplot(model_pca$x, colour = data_all[,24])
+
+table(data_all[,24])
+
