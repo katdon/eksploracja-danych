@@ -1,0 +1,66 @@
+---
+title: "Prognoza pogody w Hiszpanii w 2012 roku"
+author: "Katarzyna Donaj, Eryk Wilczyński"
+date: "10 maja 2019"
+output: beamer_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Prezentacja danych
+
+Zbiór zawiera dane pochodzące z pewnego domostwa w Hiszpanii zapisywane przez system monitorujący. Dane pobierane były co minutę, a następnie zostały wygładzone w 15 minutowych odstępach za pomocą średniej.
+
+## Prezentacja danych
+
+- Temperatura w pokoju oraz jadalni
+- Prognozę temperatury na zewnętrz
+- Zawartość CO2 (dwutlenku węgla) w pokoju oraz jadalni
+- Względna wilgotność powietrza w pokoju oraz jadalni
+- Natężenie oświetlenia
+- Opady deszczu
+- Prędkość wiatru
+- Oświetlenie mieszkania
+- Promieniowanie słoneczne
+- Rzeczywista temperatura na zewnątrz
+- Rzeczywista względna wilgotność powietrza
+- Dzień tygodnia
+
+```{r warning=FALSE, include=FALSE}
+library(readr)
+data_train <- read_table2("NEW-DATA-1.T15.txt")
+data_test <- read_table2("NEW-DATA-2.T15.txt")
+data_all <- rbind(data_train, data_test)
+library(chron)
+# laczymy date z godzina
+data_all <- as.data.frame(data_all)
+Date_time = chron(dates=data_all[,1],times=data_all[,2],format=c('d/m/y','h:m:s'))
+data_all <- as.data.frame(data_all)
+data_all[,25] <- Date_time
+```
+
+## 
+
+```{r data_all}
+plot(data_all[,25],data_all[,22], col = 'green', xlab = "Data", ylab = 'Stopnie Celsjusza', main = 'Temperatura')
+points(data_all[,25],data_all[,3], col = 'blue')
+points(data_all[,25],data_all[,4], col = 'red')
+legend('topleft', legend=c("Pokoj", "Jadalnia", "Poza domem"), col = c('red','blue', 'green'), pch = 21, cex=0.45)
+```
+
+##
+```{r}
+plot(data_all[,25],data_all[,7], col = 'red', xlab = "Data", ylab = 'ppm', main = 'Zawartość CO2')
+points(data_all[,25],data_all[,6], col = 'blue')
+legend('topleft', legend=c("Pokój", "Jadalnia"), col = c('red','blue'), pch = 21, cex=0.6)
+```
+
+##
+```{r}
+plot(data_all[1240:1300,25],data_all[1240:1300,7], col = 'red', xlab = "Data", ylab = 'ppm', main = 'Zawartość CO2')
+points(data_all[1240:1300,25],data_all[1240:1300,6], col = 'blue')
+legend('topleft', legend=c("Pokój", "Jadalnia"), col = c('red','blue'), pch = 21, cex=0.6)
+```
+
