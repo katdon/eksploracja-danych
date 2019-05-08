@@ -156,3 +156,43 @@ data_test[,5] <- as.data.frame(data_test[,5])
 rmse(y[,19], y[,18])
 rmse(y[,15],y[,18])
 rmse(y[,15],y[,19])
+
+#Obcinamy dane
+#Obserwacje odstaj¹ce zawartosci CO2 dla jadalni i pokoju
+data_train <- as.data.frame(data_train)
+boxplot(data_train[,6], data_train[,7], col = c('blue', 'red'), 
+        names = c('Jadalnia','Pokój'), ylab = 'ppm', main = 'Zawartoœæ CO2')
+summary(data_train[,6:7])
+odst_co2_j <- (211.2 - 200.9) * 1.5 + 211.2
+data_train_1 <- data_train[data_train[,6] < odst_co2_j,]
+boxplot(data_train_1[,6], data_train_1[,7], col = c('blue', 'red'), 
+        names = c('Jadalnia','Pokój'), ylab = 'ppm', main = 'Zawartoœæ CO2')
+summary(data_train_1[,7])
+odst_co2_p <- (212.8 - 202.4) * 1.5 + 212.8
+data_train_1 <- data_train_1[data_train_1[,7] < odst_co2_p,]
+boxplot(data_train_1[,6], data_train_1[,7], col = c('blue', 'red'), 
+        names = c('Jadalnia','Pokój'), ylab = 'ppm', main = 'Zawartoœæ CO2 bez obserwacji odstaj¹cych')
+
+#Obserwacje odstaj¹ce natê¿enia oœwietlenia dla jadalni i pokoju
+summary(data_train_1[,10:11])
+boxplot(data_train_1[,10], data_train_1[,11], col = c('blue', 'red'), 
+        names = c('Jadalnia','Pokój'), ylab = 'ppm', main = 'Natê¿enie oœwietlenia')
+odst_lux_j <- (26.69 - 11.52) * 1.5 + 26.69
+data_train_1 <- data_train_1[data_train_1[,10] < odst_lux_j,]
+boxplot(data_train_1[,10], data_train_1[,11], col = c('blue', 'red'), 
+        names = c('Jadalnia','Pokój'), ylab = 'ppm', main = 'Natê¿enie oœwietlenia')
+summary(data_train_1[,11])
+odst_lux_p <- (23.42 - 13.18) * 1.5 + 23.42
+data_train_1 <- data_train_1[data_train_1[,11] < odst_lux_p,]
+boxplot(data_train_1[,10], data_train_1[,11], col = c('blue', 'red'), 
+        names = c('Jadalnia','Pokój'), ylab = 'ppm', main = 'Natê¿enie oœwietlenia bez obserwacji odstaj¹cych')
+
+#Sprawdzamy ile zosta³o obserwacji odstaj¹cych
+summary(data_train_1[,10:11])
+dim(data_train_1[data_train_1[,10] >= (17.17 - 11.52) * 1.5 + 17.17,]) # 25 obserwacji odstaj¹cych
+dim(data_train_1[data_train_1[,11] >= (22.60 - 13.10) * 1.5 + 22.60,]) # 11 obserwacji odstaj¹cych
+dim(data_train_1[,10])
+summary(data_train[,10:11])
+dim(data_train[data_train[,10] >= (31.22 - 11.59) * 1.5 + 31.22,]) # 351 obserwacji odstaj¹cych
+dim(data_train[data_train[,11] >= (52.06 - 13.27) * 1.5 + 52.06,]) # 415 obserwacji odstaj¹cych
+
