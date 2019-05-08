@@ -116,7 +116,7 @@ summary(model_3)
 install.packages('Metrics')
 library(Metrics)
 x <- data.frame(predict(model_3,data_test),data_test)
-rmse(x[,4], x[,1])
+rmse(x[,4], x[,1]) # 0.2094367
 # Sprawdzenie prognozy
 data_test_2 <- data_test[,c(3,4,6,7,8,9,10,11,12,14,15,16,17,18,22,23,24)]
 y <- data.frame(data_test_2,predict(model_3,data_test_2))
@@ -138,7 +138,7 @@ install.packages('Metrics')
 library(Metrics)
 data_test_3 <- data_test[,c(3,4,6,7,8,9,10,11,12,14,15,16,17,18,22,23,24)]
 y <- data.frame(data_test_3,predict(model_p_3,data_test_3))
-rmse(y[,2], y[,18])
+rmse(y[,2], y[,18]) # 0.1706739
 step(model_p) # wyszlo to samo
 
 #Tworzymy model wielorakiej regresji liniowej dla dworu
@@ -196,3 +196,51 @@ summary(data_train[,10:11])
 dim(data_train[data_train[,10] >= (31.22 - 11.59) * 1.5 + 31.22,]) # 351 obserwacji odstaj¹cych
 dim(data_train[data_train[,11] >= (52.06 - 13.27) * 1.5 + 52.06,]) # 415 obserwacji odstaj¹cych
 
+# robimy nowe modele dla danych bez obserwacji odstajacych
+#Macierze korelacji
+data_jadalnia_1 <- data_train_1[,c(3,4,6,7,8,9,10,11,12,14,15,16,17,18,22,23,24)]
+View(round(cor(data_jadalnia_1),2))
+
+#Tworzymy model wielorakiej regresji liniowej dla jadalni
+model_ob_1 <- lm(`3:Temperature_Comedor_Sensor`~., data = data_jadalnia_1)
+summary(model_ob_1)
+model_ob_2 <- lm(`3:Temperature_Comedor_Sensor`~ . - `10:Lighting_Comedor_Sensor`, data = data_jadalnia_1)
+summary(model_ob_2)
+model_ob_3 <- lm(`3:Temperature_Comedor_Sensor`~ . - `10:Lighting_Comedor_Sensor` - `15:Meteo_Exterior_Sol_Oest`, data = data_jadalnia_1)
+summary(model_ob_3)
+model_ob_4 <- lm(`3:Temperature_Comedor_Sensor`~ . - `10:Lighting_Comedor_Sensor` - `15:Meteo_Exterior_Sol_Oest` - `12:Precipitacion`, data = data_jadalnia_1)
+summary(model_ob_4)
+model_ob_5 <- lm(`3:Temperature_Comedor_Sensor`~ . - `10:Lighting_Comedor_Sensor` - `15:Meteo_Exterior_Sol_Oest` - `12:Precipitacion` - `16:Meteo_Exterior_Sol_Est`, data = data_jadalnia_1)
+summary(model_ob_5)#ten w miare dobry
+model_ob_6 <- lm(`3:Temperature_Comedor_Sensor`~ . - `10:Lighting_Comedor_Sensor` - `15:Meteo_Exterior_Sol_Oest` - `12:Precipitacion` - `16:Meteo_Exterior_Sol_Est` - `17:Meteo_Exterior_Sol_Sud`, data = data_jadalnia_1)
+summary(model_ob_6)
+model_ob_7 <- lm(`3:Temperature_Comedor_Sensor`~ . - `10:Lighting_Comedor_Sensor` - `15:Meteo_Exterior_Sol_Oest` - `12:Precipitacion` - `16:Meteo_Exterior_Sol_Est` - `17:Meteo_Exterior_Sol_Sud` - `18:Meteo_Exterior_Piranometro`, data = data_jadalnia_1)
+summary(model_ob_7) #ok
+# prognoza
+install.packages('Metrics')
+library(Metrics)
+x <- data.frame(predict(model_ob_7,data_test),data_test)
+rmse(x[,4], x[,1]) # 0.238235
+y <- data.frame(predict(model_ob_5,data_test),data_test)
+rmse(y[,4], y[,1]) # 0.2377279
+BIC(model_3, model_ob_5, model_ob_7)
+AIC(model_3, model_ob_5, model_ob_7)
+#Wybieramy model_ob_5 - ma niskie akaike i niskie rsme
+
+#Tworzymy model wielorakiej regresji liniowej dla pokoju
+data_pokoj_1 <- data_train_1[,c(3,4,6,7,8,9,10,11,12,14,15,16,17,18,22,23,24)]
+View(round(cor(data_pokoj_1),2))
+model_p_ob_1 <- lm(`4:Temperature_Habitacion_Sensor`~ ., data = data_pokoj_1)
+summary(model_p_ob_1)
+model_p_ob_2 <- lm(`4:Temperature_Habitacion_Sensor`~ . - `16:Meteo_Exterior_Sol_Est`, data = data_pokoj_1)
+summary(model_p_ob_2)
+model_p_ob_3 <- lm(`4:Temperature_Habitacion_Sensor`~ . - `16:Meteo_Exterior_Sol_Est` - `11:Lighting_Habitacion_Sensor`, data = data_pokoj_1)
+summary(model_p_ob_3)
+model_p_ob_4 <- lm(`4:Temperature_Habitacion_Sensor`~ . - `16:Meteo_Exterior_Sol_Est` - `11:Lighting_Habitacion_Sensor` - `15:Meteo_Exterior_Sol_Oest`, data = data_pokoj_1)
+summary(model_p_ob_4)
+# prognoza
+z <- data.frame(predict(model_p_ob_4,data_test),data_test)
+rmse(z[,4], z[,1]) # 0.5654549
+BIC(model_p_3, model_p_ob_4)
+AIC(model_p_3, model_p_ob_4)
+# wybieramy model_p_ob_4; kryteria BIC i AIC s¹ duzo lepsze niz dla modelu z obserwacjami odstajacymi
