@@ -13,7 +13,8 @@ ui <- dashboardPage(
     menuItem("Temperatura", tabName = "temp", icon = icon("temp")),
     menuItem("Wilgotność", tabName = "wilg", icon = icon("wilg")),
     menuItem("CO2", tabName = "co2", icon = icon("co2")),
-    menuItem("Oswietlenie", tabName = 'lux', icon = icon("co2"))
+    menuItem("Oswietlenie", tabName = 'lux', icon = icon("lux")),
+    menuItem("PCA",tabName = "pca",icon = icon("lux"))
   )),
   dashboardBody(
     tabItems(
@@ -48,7 +49,13 @@ ui <- dashboardPage(
             box(plotlyOutput("plot10"), width = 600),
             box(plotlyOutput("plot12"), width = 600)
           )
-  )
+  ),
+  tabItem(tabName = 'pca',
+          fluidRow(
+            tableOutput('table'),
+            plotOutput("plot13")
+          )
+)
 )
 )
 )
@@ -167,7 +174,7 @@ server <- function(input, output) {
     y <- list(
       title = "Liczebność"
     )
-    plot_ly(data_all[1:1000,], x =~`14:Meteo_Exterior_Viento`, type = 'histogram') %>%
+    plot_ly(data_all[1:1000,], x =~`14:Meteo_Exterior_Viento`, type = 'histogram', nbinsx = 14) %>%
       layout(xaxis = x, yaxis = y)
   })
   
@@ -232,6 +239,22 @@ server <- function(input, output) {
             , line=list(color = 'red'), marker=list(color="red")) %>%
       add_trace(y = ~`10:Lighting_Comedor_Sensor`, name = 'Jadalnia', marker=list(color="blue"), line = list(color = 'blue')) %>%
       layout(xaxis = x, yaxis = y)
+  })
+  
+  model_pca <- prcomp(data_all[,c(3:18,22:23)], scale = T)
+  
+  data_all[,24] <- ifelse(data_all[,24]<2,1,
+                          ifelse(2<=data_all[,24] & data_all[,24]<3,2,
+                                 ifelse(3<=data_all[,24] & data_all[,24]<4,3,
+                                        ifelse(4<=data_all[,24] & data_all[,24]<5,4,
+                                               ifelse(5<=data_all[,24] & data_all[,24]<6,5,
+                                                      ifelse(6<=data_all[,24] & data_all[,24]<7,6,7))))))
+  
+  output$table <- renderTable(as.data.frame(summary(model_pca)$importance))
+  
+  output$plot13 <- renderPlot({
+    plot(model_pca$x, xlab = paste('PC1 (', 100* summary(model_pca)$importance[2],'%)'), 
+         ylab = paste('PC2 (', 100 *summary(model_pca)$importance[5], '%)'), col = data_all[,24], main = "PCA")
   })
 }
 
