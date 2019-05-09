@@ -12,9 +12,8 @@ ui <- dashboardPage(
     menuItem("Wiatr", tabName = "wiatr", icon = icon("wia")),
     menuItem("Temperatura", tabName = "temp", icon = icon("temp")),
     menuItem("Wilgotność", tabName = "wilg", icon = icon("wilg")),
-    menuItem("CO2", tabName = "co2", icon = icon("co2")),
-    menuItem("Oswietlenie", tabName = 'lux', icon = icon("lux")),
-    menuItem("PCA",tabName = "pca",icon = icon("lux"))
+    menuItem("Oświetlenie", tabName = 'lux', icon = icon("lux")),
+    menuItem("CO2", tabName = "co2", icon = icon("co2"))
   )),
   dashboardBody(
     tabItems(
@@ -36,26 +35,20 @@ ui <- dashboardPage(
             box(plotlyOutput("plot4"), width = 600)
           )
           ),
-  tabItem(tabName = 'co2',
-          fluidRow(
-            box(plotlyOutput("plot5"), width = 600),
-            box(plotlyOutput("plot6"), width = 600),
-            box(plotlyOutput("plot11"), width = 600)
-          )
-  ),
   tabItem(tabName = 'lux',
           fluidRow(
             box(plotlyOutput("plot9"), width = 600),
             box(plotlyOutput("plot10"), width = 600),
             box(plotlyOutput("plot12"), width = 600)
           )
-  ),
-  tabItem(tabName = 'pca',
+          ),
+  tabItem(tabName = 'co2',
           fluidRow(
-            tableOutput('table'),
-            plotOutput("plot13")
+            box(plotlyOutput("plot5"), width = 600),
+            box(plotlyOutput("plot6"), width = 600),
+            box(plotlyOutput("plot11"), width = 600)
           )
-)
+  )
 )
 )
 )
@@ -93,9 +86,9 @@ server <- function(input, output) {
       title = "Stopnie Celsjusza"
     )
     plot_ly(data_all, y =~`22:Temperature_Exterior_Sensor`, name = 'Na zewnątrz', type = 'box'
-            , line=list(color = 'green'), marker=list(color="green")) %>%
-      add_trace(y = ~`4:Temperature_Habitacion_Sensor`, name = 'Pokój', line = list(color = 'red'), marker=list(color="red")) %>%
-      add_trace(y = ~`3:Temperature_Comedor_Sensor`, name = 'Jadalnia',line = list(color = 'blue'), marker=list(color="blue")) %>%
+            , line=list(color = 'green'), marker=list(color="green"), fill = 'green') %>%
+      add_trace(y = ~`4:Temperature_Habitacion_Sensor`, name = 'Pokój', line = list(color = 'red'), marker=list(color="red"), fill = 'red') %>%
+      add_trace(y = ~`3:Temperature_Comedor_Sensor`, name = 'Jadalnia',line = list(color = 'blue'), marker=list(color="blue"), fill = 'blue') %>%
       layout(xaxis = x, yaxis = y)
   })
   
@@ -122,9 +115,9 @@ server <- function(input, output) {
       title = "%"
     )
     plot_ly(data_all, y =~`23:Humedad_Exterior_Sensor`, name = 'Na zewnątrz', type = 'box'
-            , line=list(color = 'green'), marker=list(color="green")) %>%
-      add_trace(y = ~`9:Humedad_Habitacion_Sensor`, name = 'Pokój', line = list(color = 'red'), marker=list(color="red")) %>%
-      add_trace(y = ~`8:Humedad_Comedor_Sensor`, name = 'Jadalnia',line = list(color = 'blue'), marker=list(color="blue")) %>%
+            , line=list(color = 'green'), marker=list(color="green"),fill = 'green') %>%
+      add_trace(y = ~`9:Humedad_Habitacion_Sensor`, name = 'Pokój', line = list(color = 'red'), marker=list(color="red"), fill = 'red') %>%
+      add_trace(y = ~`8:Humedad_Comedor_Sensor`, name = 'Jadalnia',line = list(color = 'blue'), marker=list(color="blue"), fill = 'blue') %>%
       layout(xaxis = x, yaxis = y)
   })
   
@@ -150,8 +143,8 @@ server <- function(input, output) {
       title = "ppm"
     )
     plot_ly(data_all, y =~`7:CO2_Habitacion_Sensor`, name = 'Pokój', type = 'box'
-            , line=list(color = 'red'), marker=list(color="red")) %>%
-      add_trace(y = ~`6:CO2_Comedor_Sensor`, name = 'Jadalnia', marker=list(color="blue"), line = list(color = 'blue')) %>%
+            , line=list(color = 'red'), marker=list(color="red"), fill = 'red') %>%
+      add_trace(y = ~`6:CO2_Comedor_Sensor`, name = 'Jadalnia', marker=list(color="blue"), line = list(color = 'blue'), fill = 'blue') %>%
       layout(xaxis = x, yaxis = y)
   })
   
@@ -186,8 +179,8 @@ server <- function(input, output) {
       title = "Lux"
     )
     plot_ly(data_all, y =~`11:Lighting_Habitacion_Sensor`, name = 'Pokój', type = 'box'
-            , line=list(color = 'red'), marker=list(color="red")) %>%
-      add_trace(y = ~`10:Lighting_Comedor_Sensor`, name = 'Jadalnia', marker=list(color="blue"), line = list(color = 'blue')) %>%
+            , line=list(color = 'red'), marker=list(color="red"), fill = 'red') %>%
+      add_trace(y = ~`10:Lighting_Comedor_Sensor`, name = 'Jadalnia', marker=list(color="blue"), line = list(color = 'blue'), fill = 'blue') %>%
       layout(xaxis = x, yaxis = y)
   })
   
@@ -199,8 +192,8 @@ server <- function(input, output) {
       title = "Lux"
     )
     plot_ly(data_all[1:1000,], x = ~Data, y =~`11:Lighting_Habitacion_Sensor`, name = 'Pokoj', type = 'scatter', mode = 'markers',
-            marker=list(color="red")) %>%
-      add_trace(y =~`10:Lighting_Comedor_Sensor`, name = 'Jadalnia', type = 'scatter', mode = 'markers',marker=list(color="blue"))%>%
+            marker=list(color="red"), fill = 'red') %>%
+      add_trace(y =~`10:Lighting_Comedor_Sensor`, name = 'Jadalnia', type = 'scatter', mode = 'markers',marker=list(color="blue"), fill = 'blue')%>%
       layout(xaxis = x, yaxis = y)
   })
   
@@ -218,8 +211,8 @@ server <- function(input, output) {
       title = "ppm"
     )
     plot_ly(data_train_1, y =~`7:CO2_Habitacion_Sensor`, name = 'Pokój', type = 'box'
-            , line=list(color = 'red'), marker=list(color="red")) %>%
-      add_trace(y = ~`6:CO2_Comedor_Sensor`, name = 'Jadalnia', marker=list(color="blue"), line = list(color = 'blue')) %>%
+            , line=list(color = 'red'), marker=list(color="red"), fill = 'red') %>%
+      add_trace(y = ~`6:CO2_Comedor_Sensor`, name = 'Jadalnia', marker=list(color="blue"), line = list(color = 'blue'), fill = 'blue') %>%
       layout(xaxis = x, yaxis = y)
   })
   
@@ -227,6 +220,19 @@ server <- function(input, output) {
   data_train_1 <- data_train_1[data_train_1[,10] < odst_lux_j,]
   odst_lux_p <- (23.42 - 13.18) * 1.5 + 23.42
   data_train_1 <- data_train_1[data_train_1[,11] < odst_lux_p,]
+  
+  output$plot12 <- renderPlotly({
+    x <- list(
+      title = "Data"
+    )
+    y <- list(
+      title = "Lux"
+    )
+    plot_ly(data_train_1, y =~`7:CO2_Habitacion_Sensor`, name = 'Pokój', type = 'box'
+            , line=list(color = 'red'), marker=list(color="red"), fill = 'red') %>%
+      add_trace(y = ~`6:CO2_Comedor_Sensor`, name = 'Jadalnia', marker=list(color="blue"), line = list(color = 'blue'), fill = 'blue') %>%
+      layout(xaxis = x, yaxis = y)
+  })
   
 }
 
