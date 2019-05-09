@@ -162,7 +162,6 @@ tab_model(model_d_2)
 ```
 
 
-
 ##
 ```{r}
 knitr::include_graphics("Model_tabela_j.png")
