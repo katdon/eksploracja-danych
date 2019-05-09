@@ -229,7 +229,7 @@ y <- data.frame(predict(model_ob_5,data_test),data_test)
 rmse(y[,4], y[,1]) # 0.2377279
 BIC(model_3, model_ob_5, model_ob_7)
 AIC(model_3, model_ob_5, model_ob_7)
-#Wybieramy model_ob_5 - ma niskie akaike i niskie rsme
+#Wybieramy model_ob_7 - ma niskie kryterium Akaike i niskie rsme
 
 #Tworzymy model wielorakiej regresji liniowej dla pokoju
 data_pokoj_1 <- data_train_1[,c(3,4,6,7,8,9,10,11,12,14,15,16,17,18,22,23,24)]
@@ -249,13 +249,6 @@ BIC(model_p_3, model_p_ob_4)
 AIC(model_p_3, model_p_ob_4)
 # wybieramy model_p_ob_4; kryteria BIC i AIC s¹ duzo lepsze niz dla modelu z obserwacjami odstajacymi
 
-#pca
-model_pca <- prcomp(data_all[,c(3:18,22:23)], scale = T)
-summary(model_pca)
-model_pca$rotation
-autoplot(model_pca$x, colour = data_all[,24])
-table(data_all[,24])
-
 # tabelki z podsumowaniem modeli pod prezentacjê
 install.packages("snakecase")
 library(snakecase)
@@ -267,3 +260,19 @@ tab_model(model_ob_7)
 tab_model(model_p_3)
 tab_model(model_p_ob_4)
 #tab_model(model_d_2)
+
+#PCA
+model_pca <- prcomp(data_all[,c(3:18,22:23)], scale = T)
+summary(model_pca)
+data_all[,24] <- ifelse(data_all[,24]<2,1,
+                        ifelse(2<=data_all[,24] & data_all[,24]<3,2,
+                               ifelse(3<=data_all[,24] & data_all[,24]<4,3,
+                                      ifelse(4<=data_all[,24] & data_all[,24]<5,4,
+                                             ifelse(5<=data_all[,24] & data_all[,24]<6,5,
+                                                    ifelse(6<=data_all[,24] & data_all[,24]<7,6,7))))))
+as.data.frame(summary(model_pca)$importance)
+model_pca$rotation # pokazuje w jakiej mierze poszczegolne cechy wyjasniaja skladowe glowne
+plot(model_pca$x, xlab = paste('PC1 (', 100* summary(model_pca)$importance[2],'%)'), ylab = paste('PC2 (', 100 *summary(model_pca)$importance[5], '%)'), col = data_all[,24], main = "PCA")
+table(data_all[,24])
+
+
