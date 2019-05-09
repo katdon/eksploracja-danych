@@ -249,12 +249,21 @@ BIC(model_p_3, model_p_ob_4)
 AIC(model_p_3, model_p_ob_4)
 # wybieramy model_p_ob_4; kryteria BIC i AIC s¹ duzo lepsze niz dla modelu z obserwacjami odstajacymi
 
+#pca
 model_pca <- prcomp(data_all[,c(3:18,22:23)], scale = T)
 summary(model_pca)
-
 model_pca$rotation
-
 autoplot(model_pca$x, colour = data_all[,24])
-
 table(data_all[,24])
 
+# tabelki z podsumowaniem modeli pod prezentacjê
+install.packages("snakecase")
+library(snakecase)
+library(sjPlot)
+library(sjmisc)
+library(sjlabelled)
+tab_model(model_3)
+tab_model(model_ob_7)
+tab_model(model_p_3)
+tab_model(model_p_ob_4)
+#tab_model(model_d_2)
