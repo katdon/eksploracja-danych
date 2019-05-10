@@ -28,7 +28,7 @@ Zbiór zawiera dane pochodzące z pewnego domostwa w Hiszpanii zapisywane przez 
 - Rzeczywista względna wilgotność powietrza
 - Dzień tygodnia
 
-```{r warning=FALSE, include=FALSE}
+```{r message=FALSE, warning=FALSE, include=FALSE}
 library(readr)
 data_train <- read_table2("NEW-DATA-1.T15.txt")
 data_test <- read_table2("NEW-DATA-2.T15.txt")
@@ -42,14 +42,14 @@ data_all[,25] <- Date_time
 ```
 
 ## Zmiany zawartości CO2 w powietrzu 26 marca
-```{r}
+```{r message=FALSE, warning=FALSE}
 plot(data_all[1240:1300,25],data_all[1240:1300,7], col = 'red', xlab = "Data", ylab = 'ppm')
 points(data_all[1240:1300,25],data_all[1240:1300,6], col = 'blue')
 legend('topleft', legend=c("Pokój", "Jadalnia"), col = c('red','blue'), pch = 21, cex=0.6)
 ```
 
 ## Zmiany zawartości CO2 w powietrzu 14 marca
-```{r}
+```{r message=FALSE, warning=FALSE}
 plot(data_all[80:120,25],data_all[80:120,7], col = 'red', xlab = "Data", ylab = 'ppm')
 points(data_all[80:120,25],data_all[80:120,6], col = 'blue')
 legend('topleft', legend=c("Pokój", "Jadalnia"), col = c('red','blue'), pch = 21, cex=0.6)
@@ -146,3 +146,25 @@ kable(AIC_BIC_1)
 ```
 
 Wybrano model z obciętymi danymi.
+
+## PCA
+
+```{r}
+model_pca <- prcomp(data_all[,c(3:18,22:23)], scale = T)
+kable(summary(model_pca)$importance[,1:4])
+```
+
+##
+```{r}
+data_all[,24] <- ifelse(data_all[,24]<2,1,
+                        ifelse(2<=data_all[,24] & data_all[,24]<3,2,
+                               ifelse(3<=data_all[,24] & data_all[,24]<4,3,
+                                      ifelse(4<=data_all[,24] & data_all[,24]<5,4,
+                                             ifelse(5<=data_all[,24] & data_all[,24]<6,5,
+                                                    ifelse(6<=data_all[,24] & data_all[,24]<7,6,7))))))
+plot(model_pca$x, xlab = paste('PC1 (', 100* summary(model_pca)$importance[2],'%)'), ylab = paste('PC2 (', 100 *summary(model_pca)$importance[5], '%)'), col = data_all[,24])
+legend('topleft', legend=c("Poniedziałek", "Wtorek", "Środa","Czwartek","Piątek","Sobota","Niedziela"), col = unique(data_all[,24]), pch = 21, cex=0.6)
+```
+
+
+

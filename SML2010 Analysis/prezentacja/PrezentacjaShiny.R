@@ -58,7 +58,8 @@ server <- function(input, output) {
   data_test <- read_table2("NEW-DATA-2.T15.txt")
   data_all <- rbind(data_train, data_test)
   data_all <- as.data.frame(data_all)
-  Date_time = chron(dates=data_all[,1],times=data_all[,2],format=c('d/m/y','h:m:s'))
+  Date_time <- as.POSIXct(paste(data_all[,1], data_all[,2]), 
+             format= "%d/%m/%Y %H:%M:%S")
   data_all <- as.data.frame(data_all)
   data_all[,25] <- Date_time
   colnames(data_all)[25] <- "Data"
